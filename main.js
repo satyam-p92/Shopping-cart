@@ -1,40 +1,11 @@
 let shop = document.getElementById('shop');
 
-let shopItemsData = [
-    {
-        id:"asdfg",
-        name: "Casual Shirts",
-        price: 45,
-        desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        img: "images/img-1.jpg",
-    },
-    {
-        id:"afhdfhd",
-        name: "Formal Shirts",
-        price: 90,
-        desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        img: "images/img-2.jpg",
-    },
-    {
-        id:"argrg",
-        name: "T-shirts",
-        price: 145,
-        desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        img: "images/img-3.jpg",
-    },
-    {
-        id:"jghhgf",
-        name: "Mens Suits",
-        price: 300,
-        desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        img: "images/img-4.jpg",
-    },
-];
+
 
 let basket = JSON.parse(localStorage.getItem("data")) || [];
 
-let generateShop = ()  => {
-    return (shop.innerHTML = shopItemsData.map((x)=>{
+let generateShop = () => {
+    return (shop.innerHTML = shopItemsData.map((x) => {
         let { id, name, price, desc, img } = x;
         let search = basket.find((x) => x.id === id) || [];
         return `
@@ -48,7 +19,7 @@ let generateShop = ()  => {
                     <div class="flex gap-3 text-12">
                         <i onClick="increment(${id})" class="bi bi-plus-lg"></i>
                         <div id =${id} class="quantity">
-                        ${search.item === undefined? 0: search.item}
+                        ${search.item === undefined ? 0 : search.item}
                         </div>
                         <i onClick="decrement(${id})" class="bi bi-dash-lg"></i>
                     </div>
@@ -64,7 +35,7 @@ generateShop();
 
 let increment = (id) => {
     let selectedItem = id;
-    let search = basket.find((x)=> x.id === selectedItem.id);
+    let search = basket.find((x) => x.id === selectedItem.id);
 
     if (search === undefined) {
         basket.push({
@@ -74,23 +45,30 @@ let increment = (id) => {
     } else {
         search.item += 1;
     }
-    localStorage.setItem("data", JSON.stringify(basket));
+    
     //console.log(basket);
     update(selectedItem.id);
+
+    localStorage.setItem("data", JSON.stringify(basket));
 };
 
 let decrement = (id) => {
     let selectedItem = id;
-    let search = basket.find((x)=> x.id === selectedItem.id);
+    let search = basket.find((x) => x.id === selectedItem.id);
 
-    if (search.item === 0) 
+    if (search === undefined) return;
+    else if (search.item === 0)
         return;
     else {
         search.item -= 1;
     }
-    localStorage.setItem("data", JSON.stringify(basket));
-    //console.log(basket);
+    
     update(selectedItem.id);
+    basket = basket.filter((x) => x.item !==0);
+    //console.log(basket);
+   
+
+    localStorage.setItem("data", JSON.stringify(basket));
 };
 
 let update = (id) => {
@@ -100,9 +78,9 @@ let update = (id) => {
     calculation();
 };
 
-let calculation =()=> {
+let calculation = () => {
     let cartIcon = document.getElementById("cartAmount");
-    cartIcon.innerHTML = basket.map((x)=>x.item).reduce((x, y) => x + y, 0);
+    cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
 };
 
 calculation()
